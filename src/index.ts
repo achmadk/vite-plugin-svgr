@@ -1,7 +1,7 @@
 import { createFilter, FilterPattern } from '@rollup/pluginutils'
 import type { Config } from '@svgr/core'
 import fs from 'fs'
-import type { Plugin } from 'vite'
+import type { EsbuildTransformOptions, Plugin } from 'vite'
 import { transformWithEsbuild } from 'vite'
 
 export interface ViteSvgrOptions {
@@ -12,19 +12,36 @@ export interface ViteSvgrOptions {
    * @default false
    */
   exportAsDefault?: boolean
+  /**
+   * @default false
+   */
+  sourceMap?: boolean
+  /**
+   * @default undefined
+   */
   svgrOptions?: Config
-  esbuildOptions?: Parameters<typeof transformWithEsbuild>[2]
+  /**
+   * @default undefined
+   */
+  esbuildOptions?: EsbuildTransformOptions
+  /**
+   * @default undefined
+   */
   exclude?: FilterPattern
+  /**
+   * @default all files with .svg extension
+   */
   include?: FilterPattern
 }
 
 export default function viteSvgr({
-  exportAsDefault,
-  svgrOptions,
-  esbuildOptions,
+  exportAsDefault = false,
+  sourceMap = false,
+  svgrOptions = undefined,
+  esbuildOptions = undefined,
   include = '**/*.svg',
-  exclude,
-}: ViteSvgrOptions = {}): Plugin {
+  exclude = undefined,
+}: ViteSvgrOptions): Plugin {
   const filter = createFilter(include, exclude)
   return {
     name: 'vite-plugin-svgr',
@@ -44,13 +61,13 @@ export default function viteSvgr({
         })
 
         const res = await transformWithEsbuild(componentCode, id, {
+          ...(esbuildOptions ?? {}),
           loader: 'jsx',
-          ...esbuildOptions,
         })
 
         return {
           code: res.code,
-          map: null, // TODO:
+          map: sourceMap ? res.map : null,
         }
       }
     },

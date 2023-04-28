@@ -1,14 +1,14 @@
-# vite-plugin-svgr
+# @achmadk/vite-plugin-svgr
 
 [![npm](https://img.shields.io/npm/v/vite-plugin-svgr.svg)](https://www.npmjs.com/package/vite-plugin-svgr)
 
-Vite plugin to transform SVGs into React components. Uses [svgr](https://github.com/gregberge/svgr) under the hood.
+Vite plugin to transform SVGs into React components. Uses the latest version of [svgr](https://github.com/gregberge/svgr) under the hood.
 
 ## Usage
 
 ```js
 // vite.config.js
-import svgr from 'vite-plugin-svgr'
+import svgr from '@achmadk/vite-plugin-svgr'
 
 export default {
   // ...
