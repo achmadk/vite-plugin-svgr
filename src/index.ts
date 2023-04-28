@@ -32,6 +32,10 @@ export interface ViteSvgrOptions {
    * @default all files with .svg extension
    */
   include?: FilterPattern
+  /**
+   * @default false
+   */
+  isTypescript?: boolean
 }
 
 export default function viteSvgr({
@@ -41,6 +45,7 @@ export default function viteSvgr({
   esbuildOptions = undefined,
   include = '**/*.svg',
   exclude = undefined,
+  isTypescript = false
 }: ViteSvgrOptions): Plugin {
   const filter = createFilter(include, exclude)
   return {
@@ -61,8 +66,8 @@ export default function viteSvgr({
         })
 
         const res = await transformWithEsbuild(componentCode, id, {
+          loader: isTypescript ? 'tsx' : 'jsx',
           ...(esbuildOptions ?? {}),
-          loader: 'jsx',
         })
 
         return {
