@@ -1,4 +1,5 @@
 import { createFilter, FilterPattern } from '@rollup/pluginutils'
+import { transform } from '@svgr/core'
 import type { Config } from '@svgr/core'
 import fs from 'fs'
 import type { EsbuildTransformOptions, Plugin } from 'vite'
@@ -16,17 +17,8 @@ export interface ViteSvgrOptions {
    * @default false
    */
   sourceMap?: boolean
-  /**
-   * @default undefined
-   */
   svgrOptions?: Config
-  /**
-   * @default undefined
-   */
   esbuildOptions?: EsbuildTransformOptions
-  /**
-   * @default undefined
-   */
   exclude?: FilterPattern
   /**
    * @default all files with .svg extension
@@ -41,10 +33,10 @@ export interface ViteSvgrOptions {
 export default function viteSvgr({
   exportAsDefault = false,
   sourceMap = false,
-  svgrOptions = undefined,
-  esbuildOptions = undefined,
+  svgrOptions,
+  esbuildOptions,
   include = '**/*.svg',
-  exclude = undefined,
+  exclude,
   isTypescript = false
 }: ViteSvgrOptions): Plugin {
   const filter = createFilter(include, exclude)
@@ -52,20 +44,17 @@ export default function viteSvgr({
     name: 'vite-plugin-svgr',
     async transform(code, id) {
       if (filter(id)) {
-        const { transform } = await import('@svgr/core')
         const svgCode = await fs.promises.readFile(
           id.replace(/\?.*$/, ''),
           'utf8'
         )
-
-        const componentCode = await transform(svgCode, svgrOptions, {
+        const componentCode = transform.sync(svgCode, svgrOptions, {
           filePath: id,
           caller: {
             previousExport: exportAsDefault ? null : code,
-          },
+          }
         })
-
-        const res = await transformWithEsbuild(componentCode, id, {
+        const res = await transformWithEsbuild(`export default ${componentCode}`, id, {
           loader: isTypescript ? 'tsx' : 'jsx',
           ...(esbuildOptions ?? {}),
         })
