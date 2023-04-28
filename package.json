@@ -18,7 +18,8 @@
   "scripts": {
     "dev": "tsdv watch",
     "build": "tsdv build",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "prepublishOnly": "pnpm run build"
   },
   "repository": "pd4d10/vite-plugin-svgr",
   "files": [
