@@ -22,7 +22,7 @@
     "prepare": "npm run build",
     "prepublishOnly": "pnpm run build"
   },
-  "repository": "pd4d10/vite-plugin-svgr",
+  "repository": "achmadk/vite-plugin-svgr",
   "files": [
     "dist",
     "client.d.ts"
@@ -31,7 +31,7 @@
     "vite",
     "vite-plugin"
   ],
-  "author": "Rongjian Zhang",
+  "author": "Achmad Kurnianto",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^18.16.2",
