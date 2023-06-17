@@ -23,16 +23,18 @@ export default defineConfig({
     }
   },
   plugins: [react(), svgr({
-    exportAsDefault: true,
+    // exportAsDefault: true,
     esbuildOptions: {
       jsx: 'automatic'
     },
     svgrOptions: {
+      exportType: 'named',
+      namedExport: 'ReactComponent',
       jsxRuntime: 'automatic',
-      jsxRuntimeImport: {
-        source: 'react/jsx-runtime',
-        specifiers: ['jsx']
-      },
-    }
+      // jsxRuntimeImport: {
+      //   source: 'react/jsx-runtime',
+      //   specifiers: ['jsx']
+      // }
+    },
   })],
 })
